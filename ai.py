@@ -38,7 +38,7 @@ def ai_check_legality(user_question: str, country: str = "Greece") -> str:
     - Do NOT fabricate laws—only refer to actual legal data found in your knowledge or connected search index.
     - If no clear legal conclusion is possible, say "Cannot determine with available information" and explain why.
 
-    Respond in the main language spoken in {country}.
+    Respond in the language you were spoken.
     """
 
     messages = [
