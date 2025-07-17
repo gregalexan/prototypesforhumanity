@@ -45,7 +45,7 @@ def extract_syntagma_structured(pdf_path):
 
 if __name__ == "__main__":
     pdf_path = "syntagma1_1.pdf"  # ή δώσε το path στο PDF
-    output_json = "syntagma_structured.json"
+    output_json = "syntagma_structured.txt"
 
     articles = extract_syntagma_structured(pdf_path)
 

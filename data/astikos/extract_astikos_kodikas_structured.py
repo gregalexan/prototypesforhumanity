@@ -43,7 +43,7 @@ def extract_articles_from_pdf(pdf_path):
 
 if __name__ == "__main__":
     pdf_path = "Αστικός-Κώδικας.pdf"  # ή δώσε την απόλυτη διαδρομή
-    output_json = "astikos_kodikas_structured.json"
+    output_json = "astikos_kodikas_structured.txt"
 
     articles = extract_articles_from_pdf(pdf_path)
 

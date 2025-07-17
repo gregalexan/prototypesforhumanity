@@ -35,7 +35,7 @@ def extract_articles_from_pdf(pdf_path):
 
 if __name__ == "__main__":
     pdf_path = "Αστικός-Κώδικας.pdf"
-    output_json = "astikos_kodikas.json"
+    output_json = "astikos_kodikas.txt"
 
     articles = extract_articles_from_pdf(pdf_path)
 

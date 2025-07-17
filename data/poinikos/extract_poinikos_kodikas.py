@@ -50,7 +50,7 @@ def extract_penal_code_articles_fixed(pdf_path):
 
 if __name__ == "__main__":
     pdf_path = "Ποινικός-Κώδικας.pdf"
-    output_json = "poinikos_kodikas.json"
+    output_json = "poinikos_kodikas.txt"
 
     articles = extract_penal_code_articles_fixed(pdf_path)
 
