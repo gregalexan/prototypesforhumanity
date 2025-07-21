@@ -2,9 +2,12 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+from ai.qa_loader import load_qa_chain, load_retriever
+from langchain.chains import RetrievalQA
+from langchain.retrievers import EnsembleRetriever
+
 app = FastAPI()
 
-# CORS settings to allow frontend communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -13,11 +16,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 class Message(BaseModel):
     user_message: str
+    law_type: str  # "greek" or "un"
+
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="gpt-4o")
 
 @app.post("/chat")
 def chat_endpoint(message: Message):
-    # Replace this with your AI logic later
-    return {"response": f"Legal response to: {message.user_message}"}
+    law_type = message.law_type.lower()
+
+    if law_type == "greek":
+        qa = load_qa_chain("greek_law_index")
+    elif law_type == "un":
+        # Load retrievers individually
+        retrievers = [
+            load_retriever("un_law_index"),
+            load_retriever("human_rights_index"),
+            load_retriever("international_human_law_index")
+        ]
+        ensemble = EnsembleRetriever(retrievers=retrievers)
+        qa = RetrievalQA.from_chain_type(llm=llm, retriever=ensemble, return_source_documents=True)
+    else:
+        return {"error": f"Invalid law_type '{law_type}' — must be 'greek' or 'un'"}
+
+    result = qa(message.user_message)
+
+    return {
+        "response": result["result"],
+        "sources": [
+            {
+                "source": doc.metadata.get("source", "unknown"),
+                "snippet": doc.page_content[:300]
+            } for doc in result["source_documents"]
+        ]
+    }

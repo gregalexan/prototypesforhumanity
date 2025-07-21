@@ -11,6 +11,7 @@ function App() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const [lawType, setLawType] = useState('un');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -36,7 +37,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_message: newMessage })
+        body: JSON.stringify({ user_message: newMessage, law_type: lawType })
       });
 
       if (!response.ok) {
@@ -110,6 +111,19 @@ function App() {
               <Sparkles className="w-4 h-4 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">AI-Powered</span>
             </div>
+
+            <div className="relative inline-block text-left mb-4">
+              <label className="block text-sm font-medium text-gray-600 mb-1">Jurisdiction:</label>
+              <select
+                value={lawType}
+                onChange={(e) => setLawType(e.target.value)}
+                className="bg-white border border-gray-300 text-gray-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 shadow-sm"
+              >
+                <option value="un">United Nations</option>
+                <option value="greek">Greece</option>
+              </select>
+            </div>
+
           </div>
         </header>
 
