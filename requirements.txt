@@ -3,3 +3,15 @@ selenium
 webdriver-manager
 undetected-chromedriver
 pymupdf
+fastapi
+uvicorn
+pydantic
+python-dotenv
+openai
+langchain
+langchain-openai
+langchain-community
+langchain-huggingface
+faiss-cpu
+sentence-transformers
+tf-keras
