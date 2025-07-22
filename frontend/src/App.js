@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Scale, MessageCircle, User, Sparkles } from 'lucide-react';
+import { Send, Scale, MessageCircle, User, Sparkles, ChevronDown } from 'lucide-react';
 
 function App() {
   const [userMessage, setUserMessage] = useState('');
@@ -11,7 +11,9 @@ function App() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const [lawType, setLawType] = useState('un');
+  const [lawType, setLawType] = useState('');
+  const [showModal, setShowModal] = useState(true);
+  const [tempLawType, setTempLawType] = useState('un');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -20,6 +22,23 @@ function App() {
   useEffect(() => {
     scrollToBottom();
   }, [chatHistory]);
+
+  const handleModalConfirm = () => {
+    setLawType(tempLawType);
+    setShowModal(false);
+  };
+
+  const handleLawTypeChange = (newLawType) => {
+    setLawType(newLawType);
+    // Προαιρετικά: Μπορείς να προσθέσεις ένα μήνυμα στο chat ότι άλλαξε το jurisdiction
+    setChatHistory(prev => [
+      ...prev,
+      {
+        role: 'lawchecker',
+        text: `✅ Jurisdiction updated to ${newLawType === 'un' ? 'United Nations' : 'Greece'}`
+      }
+    ]);
+  };
 
   const handleSend = async () => {
     if (!userMessage.trim() || isLoading) return;
@@ -80,8 +99,119 @@ function App() {
     'What do I do in case of a dispute?'
   ];
 
+  const getLawTypeDisplay = () => {
+    return lawType === 'un' ? 'United Nations' : 'Greece';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Modal Overlay */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="relative max-w-md w-full">
+            {/* Modal Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-2xl opacity-20"></div>
+            
+            {/* Modal Content */}
+            <div className="relative backdrop-blur-xl bg-white/95 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/25 p-8 animate-fade-in">
+              <div className="text-center mb-8">
+                {/* Modal Icon */}
+                <div className="relative mx-auto mb-6 w-16 h-16">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75"></div>
+                  <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-2xl">
+                    <Scale className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+
+                {/* Modal Title */}
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
+                  Welcome to LawChecker
+                </h2>
+                <p className="text-gray-600 font-medium">
+                  Please select your preferred jurisdiction to get started
+                </p>
+              </div>
+
+              {/* Law Type Selection */}
+              <div className="space-y-4 mb-8">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Choose Jurisdiction:
+                </label>
+                
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setTempLawType('un')}
+                    className={`w-full p-4 rounded-2xl border-2 transition-all duration-300 text-left group ${
+                      tempLawType === 'un'
+                        ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-200 bg-white/50 hover:border-blue-300 hover:bg-blue-50/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                          🌍 United Nations
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          International law and regulations
+                        </p>
+                      </div>
+                      {tempLawType === 'un' && (
+                        <div className="w-5 h-5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setTempLawType('greek')}
+                    className={`w-full p-4 rounded-2xl border-2 transition-all duration-300 text-left group ${
+                      tempLawType === 'greek'
+                        ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-200 bg-white/50 hover:border-blue-300 hover:bg-blue-50/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                          🇬🇷 Greece
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Greek national law and legislation
+                        </p>
+                      </div>
+                      {tempLawType === 'greek' && (
+                        <div className="w-5 h-5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={handleModalConfirm}
+                className="relative w-full group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="relative flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  Start Legal Consultation
+                </span>
+              </button>
+
+              {/* Footer Note */}
+              <p className="text-xs text-gray-500 text-center mt-6 bg-gray-50/50 rounded-full px-4 py-2">
+                You can change jurisdiction later in the settings
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
@@ -107,30 +237,38 @@ function App() {
               </div>
             </div>
 
-            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full border border-blue-100">
-              <Sparkles className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-700">AI-Powered</span>
-            </div>
+            <div className="flex items-center gap-4">
+              {/* <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full border border-blue-100">
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-700">AI-Powered</span>
+              </div> */}
 
-            <div className="relative inline-block text-left mb-4">
-              <label className="block text-sm font-medium text-gray-600 mb-1">Jurisdiction:</label>
-              <select
-                value={lawType}
-                onChange={(e) => setLawType(e.target.value)}
-                className="bg-white border border-gray-300 text-gray-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 shadow-sm"
-              >
-                <option value="un">United Nations</option>
-                <option value="greek">Greece</option>
-              </select>
-            </div>
+              {/* Jurisdiction Dropdown - Only show after modal is closed */}
+              {!showModal && lawType && (
+                <div className="relative flex flex-col items-center text-center">
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Jurisdiction:</label>
+                  <div className="relative w-full max-w-[200px]">
+                    <select
+                      value={lawType}
+                      onChange={(e) => handleLawTypeChange(e.target.value)}
+                      className="appearance-none bg-white/80 backdrop-blur-sm border border-white/40 text-gray-800 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 pr-10 py-2.5 shadow-lg transition-all duration-300 hover:bg-white/90 font-medium min-w-[140px]"
+                    >
+                      <option value="un">United Nations</option>
+                      <option value="greek">Greece</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  </div>
+                </div>
+              )}
 
+            </div>
           </div>
         </header>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-6 py-8">
           {/* Welcome Section */}
-          {chatHistory.length === 1 && (
+          {chatHistory.length === 1 && !showModal && (
             <div className="text-center mb-12 animate-fade-in">
               <div className="mb-8">
                 <h2 className="text-4xl font-bold text-gray-800 mb-4">
@@ -139,6 +277,14 @@ function App() {
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                   Search legal answers with confidence. Your AI-powered legal assistant is here to guide you.
                 </p>
+                {lawType && (
+                  <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full border border-blue-100">
+                    <Scale className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm text-blue-700 font-medium">
+                      Active: {getLawTypeDisplay()}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
@@ -215,37 +361,41 @@ function App() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <div className="backdrop-blur-xl bg-white/80 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 transition-all duration-300 hover:shadow-blue-500/20">
-            <div className="flex gap-4 items-end">
-              <div className="flex-1">
-                <textarea
-                  value={userMessage}
-                  onChange={e => setUserMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Describe your legal question here..."
-                  className="w-full resize-none border-0 outline-none text-gray-800 placeholder-gray-500 bg-transparent text-base leading-relaxed font-medium"
-                  rows="3"
-                  disabled={isLoading}
-                />
+          {/* Input Area - Only show after modal is closed */}
+          {!showModal && (
+            <div className="backdrop-blur-xl bg-white/80 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 transition-all duration-300 hover:shadow-blue-500/20">
+              <div className="flex gap-4 items-end">
+                <div className="flex-1">
+                  <textarea
+                    value={userMessage}
+                    onChange={e => setUserMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Describe your legal question here..."
+                    className="w-full resize-none border-0 outline-none text-gray-800 placeholder-gray-500 bg-transparent text-base leading-relaxed font-medium"
+                    rows="3"
+                    disabled={isLoading}
+                  />
+                </div>
+                <button
+                  onClick={handleSend}
+                  disabled={!userMessage.trim() || isLoading}
+                  className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-4 rounded-2xl transition-all duration-300 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Send className="relative w-5 h-5" />
+                </button>
               </div>
-              <button
-                onClick={handleSend}
-                disabled={!userMessage.trim() || isLoading}
-                className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-4 rounded-2xl transition-all duration-300 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <Send className="relative w-5 h-5" />
-              </button>
             </div>
-          </div>
+          )}
 
           {/* Footer */}
-          <div className="text-center mt-6">
-            <p className="text-xs text-gray-500 bg-white/50 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-white/30">
-              🛡️ Answers are provided for informational purposes only • Consult a legal professional for specific cases
-            </p>
-          </div>
+          {!showModal && (
+            <div className="text-center mt-6">
+              <p className="text-xs text-gray-500 bg-white/50 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-white/30">
+                🛡️ Answers are provided for informational purposes only • Consult a legal professional for specific cases
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
