@@ -18,6 +18,7 @@ function App() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  const isGreek = (text) => /[Α-Ωα-ωίϊΐόάέύϋΰήώ]/.test(text);
 
   useEffect(() => {
     scrollToBottom();
@@ -71,6 +72,7 @@ function App() {
           role: 'lawchecker',
           text: data.response,
           sources: data.sources || [],
+          showSources: false,
         }
       ]);
     } catch (error) {
@@ -332,20 +334,36 @@ function App() {
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap font-medium">{message.text}</p>
                   {message.sources && message.sources.length > 0 && (
-                  <div className="mt-4 space-y-2">
-                    <h4 className="text-xs font-semibold text-gray-500 uppercase">Sources</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      {message.sources.map((src, idx) => (
-                        <SourceItem
-                          key={idx}
-                          source={src.source}
-                          snippet={src.snippet}
-                          articles={src.articles}
-                        />
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                    <div className="mt-4 space-y-2">
+                      <button
+                        onClick={() => {
+                          const updated = [...chatHistory];
+                          updated[index].showSources = !updated[index].showSources;
+                          setChatHistory(updated);
+                        }}
+                        className="text-xs text-blue-600 hover:underline font-medium"
+                      >
+                        {message.showSources ? (isGreek(message.text) ? 'Απόκρυψη Πηγών' : 'Hide Sources') : (isGreek(message.text) ? 'Προβολή Πηγών' : 'Show Sources')}
+                      </button>
+
+                      {message.showSources && (
+                        <>
+                          <h4 className="text-xs font-semibold text-gray-500 uppercase">Sources</h4>
+                          <ul className="space-y-2 text-sm text-gray-600">
+                            {message.sources.map((src, idx) => (
+                              <SourceItem
+                                key={idx}
+                                source={src.source}
+                                snippet={src.snippet}
+                                articles={src.articles}
+                              />
+                            ))}
+                          </ul>
+                        </>
+                      )}
+                    </div>
+                  )}
+
                 </div>
 
                 {message.role === 'user' && (
