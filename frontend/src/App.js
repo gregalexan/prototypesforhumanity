@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Scale, MessageCircle, User, Sparkles, ChevronDown } from 'lucide-react';
+import { Send, Scale, MessageCircle, User, Sparkles, ChevronDown, Users, MapPin, Star, Phone, Mail, X } from 'lucide-react';
 
 function App() {
   const [userMessage, setUserMessage] = useState('');
@@ -14,6 +14,7 @@ function App() {
   const [lawType, setLawType] = useState('');
   const [showModal, setShowModal] = useState(true);
   const [tempLawType, setTempLawType] = useState('un');
+  const [showLawyersModal, setShowLawyersModal] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,7 +32,6 @@ function App() {
 
   const handleLawTypeChange = (newLawType) => {
     setLawType(newLawType);
-    // Προαιρετικά: Μπορείς να προσθέσεις ένα μήνυμα στο chat ότι άλλαξε το jurisdiction
     setChatHistory(prev => [
       ...prev,
       {
@@ -40,6 +40,54 @@ function App() {
       }
     ]);
   };
+
+  // Sample lawyers data
+  const lawyers = [
+    {
+      id: 1,
+      name: "Μαρία Παπαδοπούλου",
+      specialties: ["Εργατικό Δίκαιο", "Αστικό Δίκαιο"],
+      location: "Αθήνα",
+      rating: 4.8,
+      phone: "+30 210 123 4567",
+      email: "m.papadopoulou@law.gr",
+      languages: ["Ελληνικά", "English"],
+      verified: true
+    },
+    {
+      id: 2,
+      name: "John Anderson",
+      specialties: ["International Law", "Corporate Law"],
+      location: "Athens",
+      rating: 4.9,
+      phone: "+30 210 987 6543",
+      email: "j.anderson@intlaw.com",
+      languages: ["English", "Ελληνικά", "Français"],
+      verified: true
+    },
+    {
+      id: 3,
+      name: "Δημήτρης Κωνσταντίνου",
+      specialties: ["Ποινικό Δίκαιο", "Οικογενειακό Δίκαιο"],
+      location: "Θεσσαλονίκη",
+      rating: 4.7,
+      phone: "+30 231 555 0123",
+      email: "d.konstantinou@lawfirm.gr",
+      languages: ["Ελληνικά"],
+      verified: true
+    },
+    {
+      id: 4,
+      name: "Sarah Mitchell",
+      specialties: ["Human Rights", "Immigration Law"],
+      location: "International",
+      rating: 4.6,
+      phone: "+1 555 123 4567",
+      email: "s.mitchell@hrlaw.org",
+      languages: ["English", "Español", "Français"],
+      verified: false
+    }
+  ];
 
   const handleSend = async () => {
     if (!userMessage.trim() || isLoading) return;
@@ -108,7 +156,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Modal Overlay */}
+      {/* Modal Overlay for Jurisdiction Selection */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="relative max-w-md w-full">
@@ -215,6 +263,139 @@ function App() {
         </div>
       )}
 
+      {/* Lawyers Modal */}
+      {showLawyersModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            {/* Modal Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-2xl opacity-20"></div>
+            
+            {/* Modal Content */}
+            <div className="relative backdrop-blur-xl bg-white/95 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/25 animate-fade-in overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur-lg opacity-75"></div>
+                    <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-xl">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Verified Lawyers</h2>
+                    <p className="text-sm text-gray-600">Connect with professional legal experts</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowLawyersModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Lawyers List */}
+              <div className="p-6 max-h-[70vh] overflow-y-auto">
+                <div className="grid gap-4">
+                  {lawyers.map((lawyer) => (
+                    <div
+                      key={lawyer.id}
+                      className="bg-white/80 backdrop-blur-sm border border-white/40 rounded-2xl p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-start gap-4">
+                          <div className="relative">
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold ${
+                              lawyer.verified 
+                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600' 
+                                : 'bg-gradient-to-r from-gray-400 to-gray-500'
+                            }`}>
+                              {lawyer.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            {lawyer.verified && (
+                              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                <Sparkles className="w-3 h-3 text-white" />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900 text-lg">{lawyer.name}</h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <MapPin className="w-4 h-4 text-gray-500" />
+                              <span className="text-sm text-gray-600">{lawyer.location}</span>
+                              {lawyer.verified && (
+                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                  ✓ Verified
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
+                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                          <span className="text-sm font-medium text-yellow-700">{lawyer.rating}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Specialties:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {lawyer.specialties.map((specialty, idx) => (
+                            <span
+                              key={idx}
+                              className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200"
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Languages:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {lawyer.languages.map((language, idx) => (
+                            <span
+                              key={idx}
+                              className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
+                            >
+                              {language}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <Phone className="w-4 h-4" />
+                            <span>{lawyer.phone}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Mail className="w-4 h-4" />
+                            <span>{lawyer.email}</span>
+                          </div>
+                        </div>
+                        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25">
+                          Contact
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer Note */}
+                <div className="mt-6 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                  <p className="text-xs text-blue-700 text-center">
+                    💼 All lawyers are independently verified professionals. LawChecker facilitates connections but is not responsible for legal services provided.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
@@ -241,29 +422,16 @@ function App() {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full border border-blue-100">
-                <Sparkles className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-700">AI-Powered</span>
-              </div> */}
-
-              {/* Jurisdiction Dropdown - Only show after modal is closed */}
-              {!showModal && lawType && (
-                <div className="relative flex flex-col items-center text-center">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Jurisdiction:</label>
-                  <div className="relative w-full max-w-[200px]">
-                    <select
-                      value={lawType}
-                      onChange={(e) => handleLawTypeChange(e.target.value)}
-                      className="appearance-none bg-white/80 backdrop-blur-sm border border-white/40 text-gray-800 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 pr-10 py-2.5 shadow-lg transition-all duration-300 hover:bg-white/90 font-medium min-w-[140px]"
-                    >
-                      <option value="un">United Nations</option>
-                      <option value="greek">Greece</option>
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-                  </div>
-                </div>
+              {/* Find Lawyers Button - Only show after modal is closed */}
+              {!showModal && (
+                <button
+                  onClick={() => setShowLawyersModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-medium rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/25 hover:scale-105"
+                >
+                  <Users className="w-4 h-4" />
+                  <span className="hidden sm:inline">Find Lawyers</span>
+                </button>
               )}
-
             </div>
           </div>
         </header>
@@ -302,6 +470,23 @@ function App() {
                     </span>
                   </button>
                 ))}
+              </div>
+
+              {/* Call-to-action for lawyers */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 max-w-xl mx-auto">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <Users className="w-6 h-6 text-green-600" />
+                  <h3 className="text-lg font-semibold text-green-800">Need Professional Help?</h3>
+                </div>
+                <p className="text-sm text-green-700 mb-4">
+                  Connect with verified lawyers for personalized legal consultation
+                </p>
+                <button
+                  onClick={() => setShowLawyersModal(true)}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium px-6 py-2 rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/25 hover:scale-105"
+                >
+                  Browse Lawyers
+                </button>
               </div>
             </div>
           )}
@@ -363,7 +548,6 @@ function App() {
                       )}
                     </div>
                   )}
-
                 </div>
 
                 {message.role === 'user' && (
@@ -383,108 +567,133 @@ function App() {
                   </div>
                 </div>
                 <div className="bg-white/80 backdrop-blur-sm border border-white/40 rounded-3xl rounded-bl-lg px-6 py-4 shadow-lg">
-                  <div className="flex gap-2">
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce"></div>
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
+                 <div className="flex gap-2">
+                   <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce"></div>
+                   <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                   <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                 </div>
+               </div>
+             </div>
+           )}
 
-            <div ref={messagesEndRef} />
-          </div>
+           <div ref={messagesEndRef} />
+         </div>
 
-          {/* Input Area - Only show after modal is closed */}
-          {!showModal && (
-            <div className="backdrop-blur-xl bg-white/80 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 transition-all duration-300 hover:shadow-blue-500/20">
-              <div className="flex gap-4 items-end">
-                <div className="flex-1">
-                  <textarea
-                    value={userMessage}
-                    onChange={e => setUserMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Describe your legal question here..."
-                    className="w-full resize-none border-0 outline-none text-gray-800 placeholder-gray-500 bg-transparent text-base leading-relaxed font-medium"
-                    rows="3"
-                    disabled={isLoading}
-                  />
+         {/* Input Area - Only show after modal is closed */}
+         {!showModal && (
+           <div className="backdrop-blur-xl bg-white/80 border border-white/30 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 transition-all duration-300 hover:shadow-blue-500/20">
+             <div className="flex gap-4 items-end">
+               <div className="flex-1">
+                 <textarea
+                   value={userMessage}
+                   onChange={e => setUserMessage(e.target.value)}
+                   onKeyPress={handleKeyPress}
+                   placeholder="Describe your legal question here..."
+                   className="w-full resize-none border-0 outline-none text-gray-800 placeholder-gray-500 bg-transparent text-base leading-relaxed font-medium"
+                   rows="3"
+                   disabled={isLoading}
+                 />
+               </div>
+               <button
+                 onClick={handleSend}
+                 disabled={!userMessage.trim() || isLoading}
+                 className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-4 rounded-2xl transition-all duration-300 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
+               >
+                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+                 <Send className="relative w-5 h-5" />
+               </button>
+             </div>
+           </div>
+         )}
+
+         {/* Footer */}
+         {!showModal && (
+           <div className="text-center mt-6">
+             <p className="text-xs text-gray-500 bg-white/50 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-white/30">
+               🛡️ Answers are provided for informational purposes only • Consult a legal professional for specific cases
+             </p>
+           </div>
+         )}
+
+         {/* Fixed Jurisdiction Dropdown - Bottom Right */}
+          {!showModal && lawType && (
+            <div className="fixed bottom-6 right-6 z-40">
+              <div className="relative flex flex-col items-end">
+                <label className="block text-xs font-medium text-gray-500 mb-2 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
+                  Jurisdiction:
+                </label>
+                <div className="relative">
+                  <select
+                    value={lawType}
+                    onChange={(e) => handleLawTypeChange(e.target.value)}
+                    className="appearance-none bg-white/90 backdrop-blur-sm border border-white/50 text-gray-800 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block pl-4 pr-10 py-3 shadow-lg transition-all duration-300 hover:bg-white hover:shadow-xl font-medium min-w-[160px] cursor-pointer"
+                  >
+                    <option value="un">🌍 United Nations</option>
+                    <option value="greek">🇬🇷 Greece</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-xl blur-xl -z-10"></div>
                 </div>
-                <button
-                  onClick={handleSend}
-                  disabled={!userMessage.trim() || isLoading}
-                  className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-4 rounded-2xl transition-all duration-300 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 disabled:hover:scale-100"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Send className="relative w-5 h-5" />
-                </button>
               </div>
             </div>
           )}
+       </div>
+     </div>
 
-          {/* Footer */}
-          {!showModal && (
-            <div className="text-center mt-6">
-              <p className="text-xs text-gray-500 bg-white/50 backdrop-blur-sm rounded-full px-4 py-2 inline-block border border-white/30">
-                🛡️ Answers are provided for informational purposes only • Consult a legal professional for specific cases
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-        }
-      `}</style>
-    </div>
-  );
+     <style jsx>{`
+       @keyframes fade-in {
+         from {
+           opacity: 0;
+           transform: translateY(20px);
+         }
+         to {
+           opacity: 1;
+           transform: translateY(0);
+         }
+       }
+       .animate-fade-in {
+         animation: fade-in 0.6s ease-out forwards;
+       }
+     `}</style>
+   </div>
+ );
 }
 
 export default App;
 
 function SourceItem({ source, snippet, articles }) {
-  const [expanded, setExpanded] = useState(false);
-  const isGreek = source.match(/[Α-Ωα-ω]/);
-  const label = isGreek ? 'Άρθρα' : 'Articles';
+ const [expanded, setExpanded] = useState(false);
+ const isGreek = source.match(/[Α-Ωα-ω]/);
+ const label = isGreek ? 'Άρθρα' : 'Articles';
 
-  const previewLength = 100;
-  const showToggle = snippet.length > previewLength;
-  const displayText = expanded ? snippet : snippet.slice(0, previewLength);
+ const previewLength = 100;
+ const showToggle = snippet.length > previewLength;
+ const displayText = expanded ? snippet : snippet.slice(0, previewLength);
 
-  return (
-    <li className="bg-white/80 border border-blue-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
-      <h5 className="text-sm font-semibold text-blue-800 mb-1">📄 {source}</h5>
-      {articles && articles.length > 0 && (
-        <p className="text-xs text-gray-500 mb-2">
-          🧩 {label}: {articles.join(', ')}
-        </p>
-      )}
-      <p className="text-gray-700 text-sm leading-snug whitespace-pre-wrap">
-        {displayText}
-        {showToggle && (
-          <>
-            {!expanded && '... '}
-            <button
-              onClick={() => setExpanded(prev => !prev)}
-              className="ml-1 text-blue-600 hover:underline text-xs font-medium"
-            >
-              {expanded ? (isGreek ? 'Λιγότερα' : 'Show less') : (isGreek ? 'Περισσότερα' : 'Show more')}
-            </button>
-          </>
-        )}
-      </p>
-    </li>
-  );
+ return (
+   <li className="bg-white/80 border border-blue-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
+     <h5 className="text-sm font-semibold text-blue-800 mb-1">📄 {source}</h5>
+     {articles && articles.length > 0 && (
+       <p className="text-xs text-gray-500 mb-2">
+         🧩 {label}: {articles.join(', ')}
+       </p>
+     )}
+     <p className="text-gray-700 text-sm leading-snug whitespace-pre-wrap">
+       {displayText}
+       {showToggle && (
+         <>
+           {!expanded && '... '}
+           <button
+             onClick={() => setExpanded(prev => !prev)}
+             className="ml-1 text-blue-600 hover:underline text-xs font-medium"
+           >
+             {expanded ? (isGreek ? 'Λιγότερα' : 'Show less') : (isGreek ? 'Περισσότερα' : 'Show more')}
+           </button>
+         </>
+       )}
+     </p>
+   </li>
+ );
 }
