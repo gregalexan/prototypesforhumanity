@@ -69,7 +69,8 @@ function App() {
         ...prev,
         {
           role: 'lawchecker',
-          text: data.response
+          text: data.response,
+          sources: data.sources || [],
         }
       ]);
     } catch (error) {
@@ -330,6 +331,21 @@ function App() {
                   }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap font-medium">{message.text}</p>
+                  {message.sources && message.sources.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <h4 className="text-xs font-semibold text-gray-500 uppercase">Sources</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      {message.sources.map((src, idx) => (
+                        <SourceItem
+                          key={idx}
+                          source={src.source}
+                          snippet={src.snippet}
+                          articles={src.articles}
+                        />
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 </div>
 
                 {message.role === 'user' && (
@@ -419,3 +435,38 @@ function App() {
 }
 
 export default App;
+
+function SourceItem({ source, snippet, articles }) {
+  const [expanded, setExpanded] = useState(false);
+  const isGreek = source.match(/[Α-Ωα-ω]/);
+  const label = isGreek ? 'Άρθρα' : 'Articles';
+
+  const previewLength = 100;
+  const showToggle = snippet.length > previewLength;
+  const displayText = expanded ? snippet : snippet.slice(0, previewLength);
+
+  return (
+    <li className="bg-white/80 border border-blue-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
+      <h5 className="text-sm font-semibold text-blue-800 mb-1">📄 {source}</h5>
+      {articles && articles.length > 0 && (
+        <p className="text-xs text-gray-500 mb-2">
+          🧩 {label}: {articles.join(', ')}
+        </p>
+      )}
+      <p className="text-gray-700 text-sm leading-snug whitespace-pre-wrap">
+        {displayText}
+        {showToggle && (
+          <>
+            {!expanded && '... '}
+            <button
+              onClick={() => setExpanded(prev => !prev)}
+              className="ml-1 text-blue-600 hover:underline text-xs font-medium"
+            >
+              {expanded ? (isGreek ? 'Λιγότερα' : 'Show less') : (isGreek ? 'Περισσότερα' : 'Show more')}
+            </button>
+          </>
+        )}
+      </p>
+    </li>
+  );
+}

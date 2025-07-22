@@ -15,6 +15,7 @@ load_dotenv()
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 INDEX_BASE = PROJECT_ROOT  # root project folder
+PROCESSES_BASE = INDEX_BASE / "processes"
 
 # --- Embeddings ---
 universal_embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
@@ -25,7 +26,7 @@ llm = ChatOpenAI(model="gpt-4o")
 
 # --- Function: Load QA chain by index name ---
 def load_qa_chain(index_name: str) -> RetrievalQA:
-    index_path = INDEX_BASE / index_name
+    index_path = PROCESSES_BASE / index_name
     if not index_path.exists():
         raise FileNotFoundError(f"Index path does not exist: {index_path}")
     
@@ -44,7 +45,7 @@ def load_qa_chain(index_name: str) -> RetrievalQA:
 
 # --- Function: Load retriever only ---
 def load_retriever(index_name: str) -> VectorStoreRetriever:
-    index_path = INDEX_BASE / index_name
+    index_path = PROCESSES_BASE / index_name
     if not index_path.exists():
         raise FileNotFoundError(f"Index path does not exist: {index_path}")
     
