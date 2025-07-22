@@ -11,6 +11,7 @@ load_dotenv()
 
 # Setup
 SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent  # 👈 root project folder
 DATA_DIR = SCRIPT_DIR.parent / "data"
 GREEK_DIR = DATA_DIR / "greek"
 UN_DIR = DATA_DIR / "un"
@@ -25,10 +26,17 @@ embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-b
 # -------------------------------
 greek_docs = []
 for filepath in GREEK_DIR.rglob("*.txt"):
-    # print(f"📄 [GREEK] Found file: {filepath}")
     with open(filepath, "r", encoding="utf-8") as f:
         text = f.read()
     greek_docs.append(Document(page_content=text, metadata={"source": str(filepath)}))
+
+# Use multilingual embedding + tighter chunking for Greek
+greek_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=300,
+    chunk_overlap=50,
+    separators=["\nΆρθρο:", "\n", ".", " "]
+)
+greek_embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 # -------------------------------
 # Load Human Rights documents
@@ -73,11 +81,12 @@ print(f"✅ Loaded {len(un_docs)} General UN documents")
 # -------------------------------
 
 # Greek
-greek_chunks = splitter.split_documents(greek_docs)
-greek_index = FAISS.from_documents(greek_chunks, embeddings)
+greek_chunks = greek_splitter.split_documents(greek_docs)
+greek_index = FAISS.from_documents(greek_chunks, greek_embeddings)
 greek_index.save_local("greek_law_index")
 print(f"🇬🇷 Greek law: {len(greek_chunks)} chunks saved to 'greek_law_index'")
 
+"""""
 # Human Rights
 hr_chunks = splitter.split_documents(human_rights_docs)
 hr_index = FAISS.from_documents(hr_chunks, embeddings)
@@ -95,3 +104,4 @@ un_chunks = splitter.split_documents(un_docs)
 un_index = FAISS.from_documents(un_chunks, embeddings)
 un_index.save_local("un_law_index")
 print(f"🇺🇳 UN General: {len(un_chunks)} chunks saved to 'un_law_index'")
+"""
