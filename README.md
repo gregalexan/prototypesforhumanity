@@ -41,7 +41,8 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
    ```bash
    git clone https://github.com/gregalexan/prototypesforhumanity.git
    cd prototypesforhumanity
-
+   ```
+   
 2. **Create a `.env` file**  
    Add your OpenAI API Key:
    ```env
