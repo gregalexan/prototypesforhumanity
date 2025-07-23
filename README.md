@@ -9,7 +9,7 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
   - [Greek Law](#greek-law)
   - [United Nations](#united-nations)
   - [Find Lawyers](#find-lawyers)
-- [Demo Video](demo-video)
+- [Demo Video](#demo-video)
 - [Features](#features)
 - [Main Components](#main-components)
 - [Setup and Installation](#setup-and-installation)
