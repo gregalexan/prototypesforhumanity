@@ -5,6 +5,10 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
 ## Table of Contents
 - [Overview](#overview)
 - [Take a Look](#take-a-look)
+  - [Homepage](#homepage)
+  - [Greek Law](#greek-law)
+  - [United Nations](#united-nations)
+  - [Find Lawyers](#find-lawyers)
 - [Features](#features)
 - [Main Components](#main-components)
 - [Setup and Installation](#setup-and-installation)
@@ -16,7 +20,20 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
 **Law Checker** is an *AI-powered legal assistant* designed to provide accurate, user-friendly legal guidance. It answers legal questions based on official sources and includes references to justify each answer. It leverages the OpenAI API (`gpt-4o`) combined with Langchain for AI interaction.
 
 ## Take a Look
+
+### Homepage
 ![homepage](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/homepage.png)
+
+### Greek Law
+![greek-1](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/greek_1.png)
+![greek-2](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/greek_2.png)
+
+### United Nations
+![un-1](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/un_1.png)
+![un-2](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/un_2.png)
+
+### Find Lawyers
+![find-lawyers](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/find_lawyers.png)
 
 ## Features
 - 🇺🇳 **UN Law** — Trained on selected United Nations legal documents  
