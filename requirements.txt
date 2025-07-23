@@ -1,7 +1,3 @@
-selenium
-webdriver-manager
-undetected-chromedriver
-pymupdf
 fastapi
 uvicorn
 pydantic

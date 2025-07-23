@@ -1,5 +1,6 @@
 # ⚖️ Law Checker
-This is the github repo for prototypes for humanity project
+
+This is the GitHub repository for the **Prototypes for Humanity** project.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -11,54 +12,58 @@ This is the github repo for prototypes for humanity project
 - [License](#license)
 
 ## Overview
-Law Checker is an *AI-Powered* **Legal Assistant** for everyone to use. It provides simple answers to any question someone could have and also provides the sources to justify it's answer. For the AI interaction, we use OpenAI API with the gpt-4o LLM and Langchain.
+**Law Checker** is an *AI-powered legal assistant* designed to provide accurate, user-friendly legal guidance. It answers legal questions based on official sources and includes references to justify each answer. It leverages the OpenAI API (`gpt-4o`) combined with Langchain for AI interaction.
 
 ## Features
-- **United Nations:** It is trained with the United Nations Law
-- **Greece:** It is trained with the Greek Law
-- **User Interface:** Modern and Minimalistic User Interface
+- 🇺🇳 **UN Law** — Trained on selected United Nations legal documents  
+- 🇬🇷 **Greek Law** — Trained on official Greek legal codes and the Constitution  
+- 💻 **User Interface** — Minimal and modern frontend using React
 
 ## Main Components
-- **Backend (`backend/main.py`):** Sets up the FastAPI app.
-- **Frontend (`frontend/src/App.js`):**: Landing page of the app.
-- **Training Data (`data`):**: All the laws and practises.
-- **Processes (`processes/data_hugging.py`):** Creates the *.faiss* and *.pkl* files to use with the AI.
+- **Backend (`backend/main.py`)** — FastAPI server that handles LLM queries  
+- **Frontend (`frontend/src/App.js`)** — React interface for user interaction  
+- **Training Data (`data/`)** — Text files containing Greek & international legal sources  
+- **Processes (`processes/data_hugging.py`)** — Indexing script that generates FAISS vector stores
 
 ## Setup and Installation
+
 ### Prerequisites
-- **Python**
-- **React**
+- Python 3.9+
+- Node.js & npm
 
 ### Installing & Running
-1. **Clone the repository:**
-   ```bash
-   git clone git@github.com:gregalexan/prototypesforhumanity.git
-   cd prototypesforhumanity
-   ```
-2. **Set up enviroment variables**  
-    Create a .env file with your OpenAI API Key:
-    ```
-    OPENAI_API_KEY=
-    ```
 
-3. **Install the Requirements**  
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/gregalexan/prototypesforhumanity.git
+   cd prototypesforhumanity
+
+2. **Create a `.env` file**  
+   Add your OpenAI API Key:
+   ```env
+   OPENAI_API_KEY=your-api-key-here
+   ```
+
+3. **Install Python Dependencies**  
    ```bash
    pip install -r requirements.txt
    ```
-4. **Run the Backend**
+
+4. **Run the backend**
    ```bash
    cd backend
    uvicorn main:app --reload
    ```
-5. **Run the Frontend**  
-    Open a different terminal and run with this command:
-    ```bash
-    cd frontend
-    npm install
-    npm start
-    ```
-      
-The application will be running at [http://localhost:3000](http://localhost:3000).
+
+5. **Run the frontend**  
+   Open a second terminal:
+   ```bash
+   cd frontend
+   npm install
+   npm start
+   ```  
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
 ## License
-This project is licensed under the terms and conditions of *Apache-2.0 License*.
+This project is licensed under the *Apache 2.0 License*.
