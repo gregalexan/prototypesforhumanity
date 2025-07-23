@@ -9,6 +9,7 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
   - [Greek Law](#greek-law)
   - [United Nations](#united-nations)
   - [Find Lawyers](#find-lawyers)
+- [Demo Video](demo-video)
 - [Features](#features)
 - [Main Components](#main-components)
 - [Setup and Installation](#setup-and-installation)
@@ -34,6 +35,12 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
 
 ### Find Lawyers
 ![find-lawyers](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/find_lawyers.png)
+
+## Demo Video
+Watch a short walkthrough of the application showcasing its main features, including legal question answering, source citations, and multilingual support.
+
+👉 [▶️ Watch the demo on YouTube](https://youtu.be/F3woqwTIeno)
+
 
 ## Features
 - 🇺🇳 **UN Law** — Trained on selected United Nations legal documents  
