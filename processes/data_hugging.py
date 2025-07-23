@@ -1,11 +1,12 @@
-import os
+import os, re
 from pathlib import Path
 from dotenv import load_dotenv
- 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+import re
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
@@ -21,20 +22,25 @@ INTL_HUMAN_LAW_DIR = DATA_DIR / "international_human_law"
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 
+def normalize_articles(text):
+    # Αντικαθιστά όλες τις παραλλαγές με "Άρθρο {αριθμός}"
+    return re.sub(r"(Άρθρο|Αρθρο)[:\s]*([0-9]+)", r"\nΆρθρο \2", text)
+
+
 # -------------------------------
 # Load Greek law documents
 # -------------------------------
 greek_docs = []
 for filepath in GREEK_DIR.rglob("*.txt"):
     with open(filepath, "r", encoding="utf-8") as f:
-        text = f.read()
+        text = normalize_articles(f.read())
     greek_docs.append(Document(page_content=text, metadata={"source": str(filepath)}))
 
 # Use multilingual embedding + tighter chunking for Greek
 greek_splitter = RecursiveCharacterTextSplitter(
     chunk_size=300,
     chunk_overlap=50,
-    separators=["\nΆρθρο:", "\n", ".", " "]
+    separators=["\nΆρθρο", "\n", ".", " "]
 )
 greek_embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
