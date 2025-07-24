@@ -58,7 +58,8 @@ Watch a short walkthrough of the application showcasing its main features, inclu
 ### Prerequisites
 - Python 3.9+
 - Node.js & npm
-
+- Law Indexes
+  
 ### Installing & Running
 
 1. **Clone the repository**
@@ -78,13 +79,20 @@ Watch a short walkthrough of the application showcasing its main features, inclu
    pip install -r requirements.txt
    ```
 
-4. **Run the backend**
+4. **Producde the Law Indexes**  
+   *Note!* This is going to take a while.
+   ```bash
+   cd processes
+   python data_hugging.py
+   cd ..
+   ```
+5. **Run the backend**
    ```bash
    cd backend
    uvicorn main:app --reload
    ```
 
-5. **Run the frontend**  
+6. **Run the frontend**  
    Open a second terminal:
    ```bash
    cd frontend
