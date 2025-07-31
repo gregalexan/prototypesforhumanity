@@ -92,7 +92,6 @@ greek_index = FAISS.from_documents(greek_chunks, greek_embeddings)
 greek_index.save_local("greek_law_index")
 print(f"🇬🇷 Greek law: {len(greek_chunks)} chunks saved to 'greek_law_index'")
 
-"""""
 # Human Rights
 hr_chunks = splitter.split_documents(human_rights_docs)
 hr_index = FAISS.from_documents(hr_chunks, embeddings)
@@ -110,4 +109,3 @@ un_chunks = splitter.split_documents(un_docs)
 un_index = FAISS.from_documents(un_chunks, embeddings)
 un_index.save_local("un_law_index")
 print(f"🇺🇳 UN General: {len(un_chunks)} chunks saved to 'un_law_index'")
-"""
