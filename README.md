@@ -4,6 +4,7 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
 
 ## Table of Contents
 - [Overview](#overview)
+- [Research](#research)
 - [Take a Look](#take-a-look)
   - [Homepage](#homepage)
   - [Greek Law](#greek-law)
@@ -19,6 +20,11 @@ This is the GitHub repository for the **Prototypes for Humanity** project.
 
 ## Overview
 **Law Checker** is an *AI-powered legal assistant* designed to provide accurate, user-friendly legal guidance. It answers legal questions based on official sources and includes references to justify each answer. It leverages the OpenAI API (`gpt-4o`) combined with Langchain for AI interaction.
+
+## Research
+You can see the related research [here](https://github.com/gregalexan/prototypesforhumanity/blob/main/Prototypes_for_humanity.pdf).
+
+![presentation](https://github.com/gregalexan/prototypesforhumanity/blob/main/media/LawChecker_1.png)
 
 ## Take a Look
 
